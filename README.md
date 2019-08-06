@@ -1,1 +1,1 @@
-# nestjs-rabbitmq
+# nestjs-amqp
