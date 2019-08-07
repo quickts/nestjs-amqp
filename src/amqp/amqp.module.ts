@@ -1,16 +1,16 @@
 import { Module, DynamicModule } from "@nestjs/common";
-import { NacosNamingOptions } from "./amqp.interface";
+import { Options } from "./amqp.interface";
 import { createProvider } from "./amqp.provider";
-import { NacosNamingClient } from "./amqp.service";
+import { AmqpService } from "./amqp.service";
 
 @Module({})
-export class NacosNamingModule {
-    static forRoot(options: NacosNamingOptions): DynamicModule {
+export class AmqpModule {
+    static forRoot(options: Options.Connect): DynamicModule {
         const provider = createProvider(options);
         return {
-            module: NacosNamingModule,
-            providers: [provider, NacosNamingClient],
-            exports: [NacosNamingClient]
+            module: AmqpModule,
+            providers: [provider, AmqpService],
+            exports: [AmqpService]
         };
     }
 }

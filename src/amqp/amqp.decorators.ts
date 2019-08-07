@@ -1,13 +1,14 @@
 import { Options } from "amqplib";
 import { AMQP_PUBLISHER_METADATA, AMQP_CONSUMER_METADATA } from "./amqp.constants";
 
-export function Publisher(
+export function Publish(
     exchange:
         | string
         | {
               exchange: string;
               type?: string;
               exchangeOptions?: Options.AssertExchange;
+              publishOptions?: Options.Publish;
               encode?: Function;
           }
 ) {
@@ -18,7 +19,7 @@ export function Publisher(
     };
 }
 
-export function Consumer(
+export function Consume(
     exchange:
         | string
         | {
@@ -30,16 +31,17 @@ export function Consumer(
         | string
         | {
               queue: string;
-              assertOptions?: Options.AssertQueue;
+              queueOptions?: Options.AssertQueue;
               consumeOptions?: Options.Consume;
+              nackOptions?: { allUpTo?: boolean; requeue?: boolean };
               decode?: Function;
           },
-    keys?: string[]
+    patterns?: string[]
 ) {
     return (target: any, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<any>) => {
         const exchangeMetadate = typeof exchange === "string" ? { exchange: exchange, type: "fanout" } : exchange;
         const queueMetadate = typeof queue === "string" ? { queue: queue } : queue;
-        const keysMetadate = keys || [];
-        Reflect.defineMetadata(AMQP_CONSUMER_METADATA, { exchangeMetadate, queueMetadate, keysMetadate }, target, propertyKey);
+        const patternsMetadate = patterns || [];
+        Reflect.defineMetadata(AMQP_CONSUMER_METADATA, { exchangeMetadate, queueMetadate, patternsMetadate }, descriptor.value);
     };
 }

@@ -1,10 +1,10 @@
 import { Provider } from "@nestjs/common";
-import { NacosNamingOptions } from "./amqp.interface";
-import { NACOS_NAMING_OPTION } from "./amqp.constants";
+import { Options } from "./amqp.interface";
+import { AMQP_OPTION } from "./amqp.constants";
 
-export function createProvider(nacosNamingOptions: NacosNamingOptions): Provider<NacosNamingOptions> {
+export function createProvider(amqpOptions: Options.Connect): Provider<Options.Connect> {
     return {
-        provide: NACOS_NAMING_OPTION,
-        useValue: nacosNamingOptions
+        provide: AMQP_OPTION,
+        useValue: amqpOptions
     };
 }
