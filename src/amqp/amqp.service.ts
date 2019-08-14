@@ -29,11 +29,11 @@ export class AmqpService implements OnModuleInit, OnModuleDestroy {
         this.connection.on("error", err => this.logger.error(err));
 
         const consumerMetadates: any[] = [];
-        this.scannerService.scanProviderMethodMetadates(AMQP_CONSUMER_METADATA, (instance, methodName, metadata) => {
+        await this.scannerService.scanProviderMethodMetadates(AMQP_CONSUMER_METADATA, async (instance, methodName, metadata) => {
             consumerMetadates.push({ instance, methodName, metadata });
         });
         const publisherMetadates: any[] = [];
-        this.scannerService.scanProviderPropertyMetadates(AMQP_PUBLISHER_METADATA, (instance, propertyKey, metadata) => {
+        await this.scannerService.scanProviderPropertyMetadates(AMQP_PUBLISHER_METADATA, async (instance, propertyKey, metadata) => {
             publisherMetadates.push({ instance, propertyKey, metadata });
         });
         for (const { instance, propertyKey, metadata } of publisherMetadates) {
