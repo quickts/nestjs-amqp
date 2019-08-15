@@ -23,7 +23,7 @@ export class AmqpGlobalModule {
     static forRoot(options: Options.Connect): DynamicModule {
         const provider = createProvider(options);
         return {
-            module: AmqpModule,
+            module: AmqpGlobalModule,
             imports: [ScannerModule.forRoot(true)],
             providers: [provider, AmqpService],
             exports: [AmqpService]
