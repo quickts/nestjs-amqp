@@ -116,4 +116,8 @@ export class AmqpService implements OnModuleInit, OnModuleDestroy {
             this.connection = null;
         }
     }
+
+    getConnection() {
+        return this.connection;
+    }
 }
