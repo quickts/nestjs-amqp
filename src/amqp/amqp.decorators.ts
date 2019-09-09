@@ -36,12 +36,12 @@ export function Consume(
               nackOptions?: { allUpTo?: boolean; requeue?: boolean };
               decode?: Function;
           },
-    patterns?: string[]
+    patterns?: string[] | string
 ) {
     return (target: any, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<any>) => {
-        const exchangeMetadate = typeof exchange === "string" ? { exchange: exchange, type: "fanout" } : exchange;
+        const exchangeMetadate = typeof exchange === "string" ? { exchange: exchange } : exchange;
         const queueMetadate = typeof queue === "string" ? { queue: queue } : queue;
-        const patternsMetadate = patterns || [];
+        const patternsMetadate = typeof patterns === "string" ? [patterns] : patterns || [];
         Reflect.defineMetadata(AMQP_CONSUMER_METADATA, { exchangeMetadate, queueMetadate, patternsMetadate }, descriptor.value);
     };
 }
