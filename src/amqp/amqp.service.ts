@@ -40,7 +40,7 @@ export class AmqpService implements OnModuleInit, OnModuleDestroy {
             const exchangeMetadate = metadata;
             const encode = exchangeMetadate.encode || defaultEncode;
             const channel = await this.connection.createChannel();
-            await channel.assertExchange(exchangeMetadate.exchange, exchangeMetadate.type || "fanout", exchangeMetadate.exchangeOptions);
+            await channel.assertExchange(exchangeMetadate.exchange, exchangeMetadate.type || "direct", exchangeMetadate.exchangeOptions);
             instance[propertyKey] = (msg: any, routingKey?: string, publishOptions?: Options.Publish) => {
                 return channel.publish(
                     exchangeMetadate.exchange, //
@@ -62,11 +62,15 @@ export class AmqpService implements OnModuleInit, OnModuleDestroy {
             const patternsMetadate = metadata.patternsMetadate;
             const decode = queueMetadate.decode || defaultDecode;
             const channel = await this.connection.createChannel();
-            await channel.assertExchange(exchangeMetadate.exchange, exchangeMetadate.type || "fanout", exchangeMetadate.exchangeOptions);
+            await channel.assertExchange(exchangeMetadate.exchange, exchangeMetadate.type || "direct", exchangeMetadate.exchangeOptions);
             const queue = await channel.assertQueue(queueMetadate.queue, queueMetadate.queueOptions);
-            if (exchangeMetadate.type && exchangeMetadate.type != "fanout") {
-                for (const pattern of patternsMetadate) {
-                    await channel.bindQueue(queue.queue, exchangeMetadate.exchange, pattern);
+            if (exchangeMetadate.type != "fanout") {
+                if (patternsMetadate.length) {
+                    for (const pattern of patternsMetadate) {
+                        await channel.bindQueue(queue.queue, exchangeMetadate.exchange, pattern);
+                    }
+                } else {
+                    await channel.bindQueue(queue.queue, exchangeMetadate.exchange, queueMetadate.queue);
                 }
             } else {
                 await channel.bindQueue(queue.queue, exchangeMetadate.exchange, "");
