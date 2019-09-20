@@ -98,12 +98,12 @@ export class AmqpService implements OnModuleInit, OnModuleDestroy {
     }
 
     onConnectionClose(err) {
+        this.logger.error(err);
         if (this.needReconnect) {
-            this.logger.error(err);
             this.reconnectTimer = setTimeout(() => {
                 this.reconnectTimer = undefined;
                 this.onModuleInit().catch(err => {
-                    this.logger.error(err);
+                    this.onConnectionClose(err);
                 });
             }, 1000);
         }
