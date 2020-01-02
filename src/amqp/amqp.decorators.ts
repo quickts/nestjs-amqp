@@ -10,6 +10,7 @@ export function Publish(
               exchangeOptions?: Options.AssertExchange;
               publishOptions?: Options.Publish;
               encode?: Function;
+              confirm?: boolean;
           }
 ) {
     return (target: any, propertyKey: string | symbol) => {

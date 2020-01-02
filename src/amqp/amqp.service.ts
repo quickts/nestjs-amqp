@@ -39,16 +39,31 @@ export class AmqpService implements OnModuleInit, OnModuleDestroy {
         for (const { instance, propertyKey, metadata } of publisherMetadates) {
             const exchangeMetadate = metadata;
             const encode = exchangeMetadate.encode || defaultEncode;
-            const channel = await this.connection.createChannel();
-            await channel.assertExchange(exchangeMetadate.exchange, exchangeMetadate.type || "direct", exchangeMetadate.exchangeOptions);
-            instance[propertyKey] = (msg: any, routingKey?: string, publishOptions?: Options.Publish) => {
-                return channel.publish(
-                    exchangeMetadate.exchange, //
-                    routingKey || "",
-                    encode(msg),
-                    publishOptions || exchangeMetadate.publishOptions
-                );
-            };
+            if (exchangeMetadate.confirm) {
+                const channel = await this.connection.createConfirmChannel();
+                await channel.assertExchange(exchangeMetadate.exchange, exchangeMetadate.type || "direct", exchangeMetadate.exchangeOptions);
+                instance[propertyKey] = (msg: any, routingKey?: string, publishOptions?: Options.Publish, callback?: (err: any) => void) => {
+                    return channel.publish(
+                        exchangeMetadate.exchange, //
+                        routingKey || "",
+                        encode(msg),
+                        publishOptions || exchangeMetadate.publishOptions,
+                        callback
+                    );
+                };
+            } else {
+                const channel = await this.connection.createChannel();
+                await channel.assertExchange(exchangeMetadate.exchange, exchangeMetadate.type || "direct", exchangeMetadate.exchangeOptions);
+                instance[propertyKey] = (msg: any, routingKey?: string, publishOptions?: Options.Publish) => {
+                    return channel.publish(
+                        exchangeMetadate.exchange, //
+                        routingKey || "",
+                        encode(msg),
+                        publishOptions || exchangeMetadate.publishOptions
+                    );
+                };
+            }
+
             this.logger.log(`[Publisher exchange:${exchangeMetadate.exchange}] initialized`);
         }
         await this.scannerService.scanProvider(async instance => {
