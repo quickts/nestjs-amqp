@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { Publish, Consume, Publisher } from "../src";
 @Injectable()
 export class AppService {
-    @Publish("events.test")
+    @Publish({ exchange: "events.test", confirm: true })
     publisher: Publisher;
 
     constructor() {}

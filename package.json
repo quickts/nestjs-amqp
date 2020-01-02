@@ -1,52 +1,61 @@
 {
-  "name": "@quickts/nestjs-amqp",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
-  "scripts": {
-    "clean": "rimraf dist",
-    "build": "rimraf dist && tsc -p tsconfig.json",
-    "start": "ts-node -r tsconfig-paths/register src/index.ts",
-    "start:dev": "ts-node -r tsconfig-paths/register src/index.ts",
-    "start:prod": "node dist/index.js",
-    "test": "mocha -r tsconfig-paths/register -r ts-node/register --recursive -R spec test/*.ts"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/quickts/nestjs-amqp.git"
-  },
-  "keywords": [
-    "quickts",
-    "nestjs",
-    "amqp",
-    "nestjs-amqp"
-  ],
-  "author": "quickts",
-  "license": "MIT",
-  "devDependencies": {
-    "@nestjs/common": "^6.5.3",
-    "@nestjs/core": "^6.5.3",
-    "@nestjs/platform-express": "^6.5.3",
-    "@types/amqplib": "^0.5.13",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^12.7.2",
-    "amqplib": "^0.5.5",
-    "mocha": "^6.2.0",
-    "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.0",
-    "rxjs": "^6.5.2",
-    "ts-node": "^8.3.0",
-    "tsconfig-paths": "^3.8.0",
-    "typescript": "^3.5.3"
-  },
-  "dependencies": {
-    "@quickts/nestjs-scanner": "^1.0.4"
-  },
-  "files": [
-    "dist"
-  ],
-  "bugs": {
-    "url": "https://github.com/quickts/nestjs-amqp/issues"
-  },
-  "homepage": "https://github.com/quickts/nestjs-amqp#readme"
+    "name": "@quickts/nestjs-amqp",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "rimraf dist && tsc -p tsconfig.build.json",
+        "start": "ts-node -r tsconfig-paths/register src/index.ts",
+        "start:dev": "tsc-watch -p tsconfig.build.json --onSuccess \"node dist/index.js\"",
+        "start:debug": "tsc-watch -p tsconfig.build.json --onSuccess \"node --inspect-brk dist/index.js\"",
+        "start:prod": "node dist/index.js",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:cov": "jest --coverage",
+        "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+        "test:e2e": "jest --config ./test/jest-e2e.json"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/quickts/nestjs-amqp.git"
+    },
+    "keywords": [
+        "quickts",
+        "nestjs",
+        "amqp",
+        "nestjs-amqp"
+    ],
+    "author": "quickts",
+    "license": "MIT",
+    "devDependencies": {
+        "@nestjs/testing": "^6.10.13",
+        "@nestjs/common": "^6.10.13",
+        "@nestjs/core": "^6.10.13",
+        "@nestjs/platform-express": "^6.10.13",
+        "@types/amqplib": "^0.5.13",
+        "@types/jest": "^24.0.25",
+        "@types/node": "^13.1.2",
+        "@types/supertest": "^2.0.8",
+        "amqplib": "^0.5.5",
+        "jest": "^24.9.0",
+        "reflect-metadata": "^0.1.13",
+        "rimraf": "^3.0.0",
+        "supertest": "^4.0.2",
+        "rxjs": "^6.5.4",
+        "ts-jest": "^24.2.0",
+        "ts-node": "^8.5.4",
+        "tsc-watch": "^4.0.0",
+        "tsconfig-paths": "^3.9.0",
+        "typescript": "^3.7.4"
+    },
+    "dependencies": {
+        "@quickts/nestjs-scanner": "^1.0.4"
+    },
+    "files": [
+        "dist"
+    ],
+    "bugs": {
+        "url": "https://github.com/quickts/nestjs-amqp/issues"
+    },
+    "homepage": "https://github.com/quickts/nestjs-amqp#readme"
 }
